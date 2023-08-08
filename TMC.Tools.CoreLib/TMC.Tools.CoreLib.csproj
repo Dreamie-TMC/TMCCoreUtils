@@ -1,9 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net6.0-windows</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
+        <UseWindowsForms>true</UseWindowsForms>
         <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <Title>TMC.Tools.CoreLib</Title>
+        <Authors>DreamieTMC</Authors>
+        <Description>Core utilities for use with external tools target TLoZ: Minish Cap that interface through Bizhawk.</Description>
+        <RepositoryUrl>https://github.com/Dreamie-TMC/TMCCoreUtils</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(BIZHAWK_DATA_HOME)' == '' ">
