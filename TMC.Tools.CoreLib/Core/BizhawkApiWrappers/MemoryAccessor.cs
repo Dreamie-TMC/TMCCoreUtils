@@ -70,6 +70,12 @@ public interface IMemoryAccessor
     /// <param name="domain">The memory domain to read the data from</param>
     /// <returns>The value read from the given address, or 0 if the value could not be read</returns>
     uint LoadValueFromAddress(long address, ReadWriteType type, MemoryDomain domain);
+
+    /// <summary>
+    /// Reads the current area and room that Link is in
+    /// </summary>
+    /// <returns>The current area and room, or (255, 255) if the value could not be read</returns>
+    (uint area, uint room) LoadCurrentAreaAndRoom();
 }
 
 public class MemoryAccessor : IMemoryAccessor
@@ -183,5 +189,10 @@ public class MemoryAccessor : IMemoryAccessor
             ReadWriteType.Unsigned32 => ApiContainerWrapper.CurrentContainer.Memory.ReadU32(address, dom),
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
+    }
+
+    public (uint area, uint room) LoadCurrentAreaAndRoom()
+    {
+        return BlockCallsToMemory ? ((uint area, uint room))(255, 255) : (area: ApiContainerWrapper.CurrentContainer.Memory.ReadU8(0x0BF4, "IWRAM"), room: ApiContainerWrapper.CurrentContainer.Memory.ReadU8(0x0BF5, "IWRAM"));
     }
 }
