@@ -1,5 +1,13 @@
 ﻿namespace TMC.Tools.CoreLib.Core.Synchronization;
 
+/// <summary>
+/// A synchronized queue implementation using counting semaphores and mutexes. Each queue can have infinite threads
+/// writing to it, but should only have a single consumer.
+///
+/// This queue provides a less safe implementation of dequeue that requires you checking the size of the queue ahead of
+/// time but doesn't block. It is recommended to not use this unless you are reading from the queue on the main thread.
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public interface ISynchronizedQueue<T> : IDisposable
 {
     /// <summary>
@@ -25,9 +33,9 @@ public interface ISynchronizedQueue<T> : IDisposable
     T WaitDequeue();
 
     /// <summary>
-    /// Returns the first element in the queue, or null if no element exists after waiting 1 ms
+    /// Returns the first element in the queue
     /// </summary>
-    T? Dequeue();
+    T Dequeue();
     
     /// <summary>
     /// Determines whether or not there is an element in the queue
@@ -101,11 +109,9 @@ public class SynchronizedQueue<T> : ISynchronizedQueue<T>
         return result;
     }
     
-    public T? Dequeue()
+    public T Dequeue()
     {
-        var hasValue = _semaphore.WaitOne(1);
-        if (!hasValue) return default;
-        
+        _semaphore.WaitOne();
         _mutex.WaitOne();
         var result = _dispatchQueue.Dequeue();
         _mutex.ReleaseMutex();
