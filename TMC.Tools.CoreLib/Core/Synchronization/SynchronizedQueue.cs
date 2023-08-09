@@ -20,10 +20,14 @@ public interface ISynchronizedQueue<T> : IDisposable
     List<T> GetElementsInQueue();
 
     /// <summary>
-    /// Returns the first element in the queue
+    /// Returns the first element in the queue, blocking until an element is in the queue
     /// </summary>
-    T Dequeue();
+    T WaitDequeue();
 
+    /// <summary>
+    /// Returns the first element in the queue, or null if no element exists after waiting 1 ms
+    /// </summary>
+    T? Dequeue();
     
     /// <summary>
     /// Determines whether or not there is an element in the queue
@@ -41,6 +45,7 @@ public class SynchronizedQueue<T> : ISynchronizedQueue<T>
     private volatile Queue<T> _dispatchQueue;
     private volatile int _currentQueueSize;
 
+    private Semaphore _semaphore;
     private Mutex _mutex;
 
     public SynchronizedQueue()
@@ -48,6 +53,7 @@ public class SynchronizedQueue<T> : ISynchronizedQueue<T>
         _dispatchQueue = new Queue<T>(16);
         _currentQueueSize = 0;
         _mutex = new Mutex();
+        _semaphore = new Semaphore(0, 255);
     }
 
     ~SynchronizedQueue()
@@ -68,6 +74,7 @@ public class SynchronizedQueue<T> : ISynchronizedQueue<T>
         _mutex.WaitOne();
         _dispatchQueue.Enqueue(item);
         Interlocked.Add(ref _currentQueueSize, 1);
+        _semaphore.Release();
         var count = _currentQueueSize;
         _mutex.ReleaseMutex();
         return count;
@@ -84,9 +91,21 @@ public class SynchronizedQueue<T> : ISynchronizedQueue<T>
         _mutex.ReleaseMutex();
         return list;
     }
-    
-    public T Dequeue()
+
+    public T WaitDequeue()
     {
+        _semaphore.WaitOne();
+        _mutex.WaitOne();
+        var result = _dispatchQueue.Dequeue();
+        _mutex.ReleaseMutex();
+        return result;
+    }
+    
+    public T? Dequeue()
+    {
+        var hasValue = _semaphore.WaitOne(1);
+        if (!hasValue) return default;
+        
         _mutex.WaitOne();
         var result = _dispatchQueue.Dequeue();
         _mutex.ReleaseMutex();
@@ -108,10 +127,10 @@ public class SynchronizedQueue<T> : ISynchronizedQueue<T>
     private void Dispose(bool disposing)
     {
         ReleaseUnmanagedResources();
-        if (disposing)
-        {
-            _mutex.Dispose();
-        }
+        if (!disposing) return;
+        
+        _mutex.Dispose();
+        _semaphore.Dispose();
     }
     
     public void Dispose()
