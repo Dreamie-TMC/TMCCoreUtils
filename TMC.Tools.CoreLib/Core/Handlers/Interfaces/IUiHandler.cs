@@ -24,12 +24,4 @@ public interface IUiHandler
     /// This function is called on core reboot
     /// </summary>
     void Restart();
-
-    /// <summary>
-    /// This function should add any project specific services used by the given Ui Handler or its objects
-    /// to the service collection.
-    /// This should not initialize anything from CoreLib, that will be handled by te main form
-    /// </summary>
-    /// <param name="serviceCollection"></param>
-    void AddDependenciesToCollection(IServiceCollection serviceCollection);
 }
