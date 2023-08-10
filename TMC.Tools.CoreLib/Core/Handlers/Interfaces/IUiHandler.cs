@@ -1,4 +1,6 @@
-﻿namespace TMC.Tools.CoreLib.Core.Handlers.Interfaces;
+﻿using System.Windows.Forms;
+
+namespace TMC.Tools.CoreLib.Core.Handlers.Interfaces;
 
 /// <summary>
 /// This class should be inherited by the representative interface for any UI Handler in tools

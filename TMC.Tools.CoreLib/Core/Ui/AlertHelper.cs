@@ -1,4 +1,6 @@
-﻿namespace TMC.Tools.CoreLib.Core.Ui;
+﻿using System.Windows.Forms;
+
+namespace TMC.Tools.CoreLib.Core.Ui;
 
 public static class AlertHelper
 {
