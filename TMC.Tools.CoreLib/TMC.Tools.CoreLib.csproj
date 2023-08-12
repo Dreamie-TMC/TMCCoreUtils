@@ -4,6 +4,7 @@
         <Platforms>AnyCPU</Platforms>
         <TargetFramework>net48</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
+        <UseWindowsForms>true</UseWindowsForms>
         <LangVersion>11</LangVersion>
         <Nullable>enable</Nullable>
         <Title>TMC.Tools.CoreLib</Title>
@@ -18,7 +19,6 @@
         <!-- if building EmuHawk from source, point to $(ProjectDir)../BizHawk/output/ -->
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="System.Windows.Forms" />
         <Reference Include="BizHawk.Client.Common" HintPath="$(BIZHAWK_DATA_HOME)dll/BizHawk.Client.Common.dll" />
         <Reference Include="BizHawk.Emulation.Common" HintPath="$(BIZHAWK_DATA_HOME)dll/BizHawk.Emulation.Common.dll" />
     </ItemGroup>
