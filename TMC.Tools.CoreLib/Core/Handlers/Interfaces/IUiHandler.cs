@@ -24,4 +24,6 @@ public interface IUiHandler
     /// This function is called on core reboot
     /// </summary>
     void Restart();
+
+    void GetFeatureToggles(out List<CheckBox> toggles);
 }
