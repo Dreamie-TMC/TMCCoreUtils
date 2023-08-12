@@ -15,9 +15,9 @@ public interface IDelayedProcessingQueueHandler
 
 public class DelayedProcessingQueueHandler : IDelayedProcessingQueueHandler
 {
-    internal SynchronizedQueue<Func<bool>> DelayedProcessingQueue { get; set; }
+    internal ISynchronizedQueue<Func<bool>> DelayedProcessingQueue { get; set; }
 
-    public DelayedProcessingQueueHandler(SynchronizedQueue<Func<bool>> delayedProcessingQueue)
+    public DelayedProcessingQueueHandler(ISynchronizedQueue<Func<bool>> delayedProcessingQueue)
     {
         DelayedProcessingQueue = delayedProcessingQueue;
     }

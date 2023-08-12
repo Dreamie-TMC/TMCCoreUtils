@@ -81,12 +81,12 @@ public interface IMemoryAccessor
 public class MemoryAccessor : IMemoryAccessor
 {
     internal ApiContainerWrapper ApiContainerWrapper { get; set; }
-    internal ClientHelper ClientHelper { get; set; }
+    internal IClientHelper ClientHelper { get; set; }
     internal bool BlockCallsToMemory { get; set; }
 
-    public MemoryAccessor(ApiContainerWrapper containerWrapper, ClientHelper clientHelper)
+    public MemoryAccessor(IApiContainerWrapper containerWrapper, IClientHelper clientHelper)
     {
-        ApiContainerWrapper = containerWrapper;
+        ApiContainerWrapper = (ApiContainerWrapper)containerWrapper;
         ClientHelper = clientHelper;
     }
 

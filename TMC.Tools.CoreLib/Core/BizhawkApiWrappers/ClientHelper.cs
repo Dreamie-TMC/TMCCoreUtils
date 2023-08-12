@@ -30,9 +30,9 @@ public class ClientHelper : IClientHelper
 {
     internal ApiContainerWrapper ApiContainerWrapper { get; set; }
     
-    public ClientHelper(ApiContainerWrapper containerWrapper)
+    public ClientHelper(IApiContainerWrapper containerWrapper)
     {
-        ApiContainerWrapper = containerWrapper;
+        ApiContainerWrapper = (ApiContainerWrapper)containerWrapper;
     }
 
     public void CoreReboot()
