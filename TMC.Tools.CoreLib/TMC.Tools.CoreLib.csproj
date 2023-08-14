@@ -26,8 +26,12 @@
       <None Remove="Core\Resources\tmc_tool_icon.ico" />
       <EmbeddedResource Include="Core\Resources\tmc_tool_icon.ico" />
     </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+    </ItemGroup>
     
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <Copy SourceFiles="$(OutputPath)$(MSBuildProjectName).dll" DestinationFolder="$(BIZHAWK_DATA_HOME)ExternalTools/dll" />
+        <Copy SourceFiles="$(OutputPath)$(MSBuildProjectName).dll" DestinationFolder="$(BIZHAWK_DATA_HOME)../../MinishCapTasingTools/Bizhawk/ExternalTools/dll" />
     </Target>
 </Project>
