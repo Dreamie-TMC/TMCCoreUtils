@@ -21,6 +21,14 @@ public interface IClientHelper
     /// </summary>
     /// <returns>The current frame count</returns>
     int FrameCount();
+    
+    bool IsLagFrame();
+
+    int WindowSize();
+
+    int ScreenHeight();
+
+    int ScreenWidth();
 }
 
 /// <summary>
@@ -43,4 +51,12 @@ public class ClientHelper : IClientHelper
     public bool IsPaused() => ApiContainerWrapper.CurrentContainer.EmuClient.IsPaused();
 
     public int FrameCount() => ApiContainerWrapper.CurrentContainer.Emulation.FrameCount();
+
+    public bool IsLagFrame() => ApiContainerWrapper.CurrentContainer.Emulation.IsLagged();
+
+    public int WindowSize() => ApiContainerWrapper.CurrentContainer.EmuClient.GetWindowSize();
+
+    public int ScreenHeight() => ApiContainerWrapper.CurrentContainer.EmuClient.ScreenHeight();
+
+    public int ScreenWidth() => ApiContainerWrapper.CurrentContainer.EmuClient.ScreenWidth();
 }
