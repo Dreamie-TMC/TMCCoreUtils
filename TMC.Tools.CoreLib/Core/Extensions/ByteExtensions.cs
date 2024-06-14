@@ -1,4 +1,6 @@
-﻿namespace TMC.Tools.CoreLib.Core.Extensions;
+﻿using System.Text;
+
+namespace TMC.Tools.CoreLib.Core.Extensions;
 
 /// <summary>
 /// Useful extensions to convert integer values into an array of bytes
@@ -55,5 +57,19 @@ public static class ByteExtensions
             (byte)((value >> 16) & 0xFF),
             (byte)((value >> 24) & 0xFF),
         };
+    }
+
+    public static string ByteArrayToString(this IReadOnlyList<byte> value, bool useHex)
+    {
+        var builder = new StringBuilder();
+        builder.Append('[');
+        for (var i = 0; i < value.Count; )
+        {
+            builder.Append(useHex ? $"{value[i++]:X}" : $"{value[i++]}");
+            if (i == value.Count) break;
+            builder.Append(',');
+        }
+        builder.Append(']');
+        return builder.ToString();
     }
 }
