@@ -61,7 +61,7 @@ public class SynchronizedQueue<T> : ISynchronizedQueue<T>
         _dispatchQueue = new Queue<T>(16);
         _currentQueueSize = 0;
         _mutex = new Mutex();
-        _semaphore = new Semaphore(0, 255);
+        _semaphore = new Semaphore(0, 65535);
     }
 
     ~SynchronizedQueue()
