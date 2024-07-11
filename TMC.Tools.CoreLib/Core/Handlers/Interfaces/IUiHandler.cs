@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using TMC.Tools.CoreLib.Core.Handlers.Models;
 
 namespace TMC.Tools.CoreLib.Core.Handlers.Interfaces;
 
@@ -10,10 +11,10 @@ namespace TMC.Tools.CoreLib.Core.Handlers.Interfaces;
 public interface IUiHandler
 {
     /// <summary>
-    /// Gets the tab page for this handler. Each handler should only return one tab page
-    /// If a given handler has multiple tab pages then the handler should be split along those pages
+    /// Gets the data associated with this handler, see <code>UiHandlerData</code> for more details.
     /// </summary>
-    TabPage GetUiPageForHandler();
+    /// <returns></returns>
+    UiHandlerData GetHandlerData();
 
     /// <summary>
     /// This function is called in ToolFormBase.UpdateAfter on each frame
@@ -25,5 +26,8 @@ public interface IUiHandler
     /// </summary>
     void Restart();
 
-    void GetFeatureToggles(out List<CheckBox> toggles);
+    /// <summary>
+    /// This function is called when the window is closed. This should be used to clean up any lingering data or UI elements.
+    /// </summary>
+    void Close();
 }
