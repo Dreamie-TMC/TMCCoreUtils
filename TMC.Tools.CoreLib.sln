@@ -4,13 +4,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMC.Tools.CoreLib", "TMC.To
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
+		SpeedrunToolsDebug|Any CPU = SpeedrunToolsDebug|Any CPU
+		SpeedrunTools|Any CPU = SpeedrunTools|Any CPU
+		TasingToolsDebug|Any CPU = TasingToolsDebug|Any CPU
+		TasingTools|Any CPU = TasingTools|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A8AC907E-C3AD-4AA9-ABBA-10559132F60A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A8AC907E-C3AD-4AA9-ABBA-10559132F60A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A8AC907E-C3AD-4AA9-ABBA-10559132F60A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A8AC907E-C3AD-4AA9-ABBA-10559132F60A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8AC907E-C3AD-4AA9-ABBA-10559132F60A}.SpeedrunToolsDebug|Any CPU.ActiveCfg = SpeedrunToolsDebug|Any CPU
+		{A8AC907E-C3AD-4AA9-ABBA-10559132F60A}.SpeedrunToolsDebug|Any CPU.Build.0 = SpeedrunToolsDebug|Any CPU
+		{A8AC907E-C3AD-4AA9-ABBA-10559132F60A}.SpeedrunTools|Any CPU.ActiveCfg = SpeedrunTools|Any CPU
+		{A8AC907E-C3AD-4AA9-ABBA-10559132F60A}.SpeedrunTools|Any CPU.Build.0 = SpeedrunTools|Any CPU
+		{A8AC907E-C3AD-4AA9-ABBA-10559132F60A}.TasingToolsDebug|Any CPU.ActiveCfg = TasingToolsDebug|Any CPU
+		{A8AC907E-C3AD-4AA9-ABBA-10559132F60A}.TasingToolsDebug|Any CPU.Build.0 = TasingToolsDebug|Any CPU
+		{A8AC907E-C3AD-4AA9-ABBA-10559132F60A}.TasingTools|Any CPU.ActiveCfg = TasingTools|Any CPU
+		{A8AC907E-C3AD-4AA9-ABBA-10559132F60A}.TasingTools|Any CPU.Build.0 = TasingTools|Any CPU
 	EndGlobalSection
 EndGlobal

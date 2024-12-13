@@ -24,11 +24,12 @@ public class DelayedProcessingQueueHandler : IDelayedProcessingQueueHandler
 
     public void Update()
     {
+        var funcs = new List<Func<bool>>();
+        
         while (DelayedProcessingQueue.HasElement())
-        {
-            var func = DelayedProcessingQueue.Dequeue();
-            if (!func.Invoke())
-                DelayedProcessingQueue.Enqueue(func);
-        }
+            funcs.Add(DelayedProcessingQueue.Dequeue());
+        
+        foreach (var func in funcs)
+            func.Invoke();
     }
 }

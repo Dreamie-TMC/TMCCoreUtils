@@ -1,4 +1,6 @@
-﻿namespace TMC.Tools.CoreLib.Core.BizhawkApiWrappers;
+﻿using BizHawk.Client.Common;
+
+namespace TMC.Tools.CoreLib.Core.BizhawkApiWrappers;
 
 /// <summary>
 /// A wrapper for Bizhawk's EmuClient to abstract away calls to the client
@@ -29,6 +31,8 @@ public interface IClientHelper
     int ScreenHeight();
 
     int ScreenWidth();
+
+    void OnStateLoaded(StateLoadedEventHandler callback);
 }
 
 /// <summary>
@@ -59,4 +63,7 @@ public class ClientHelper : IClientHelper
     public int ScreenHeight() => ApiContainerWrapper.CurrentContainer.EmuClient.ScreenHeight();
 
     public int ScreenWidth() => ApiContainerWrapper.CurrentContainer.EmuClient.ScreenWidth();
+
+    public void OnStateLoaded(StateLoadedEventHandler callback) =>
+        ApiContainerWrapper.CurrentContainer.EmuClient.StateLoaded += callback;
 }
