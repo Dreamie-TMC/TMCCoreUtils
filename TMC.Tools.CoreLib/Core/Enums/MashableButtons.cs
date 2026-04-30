@@ -1,1 +1,0 @@
-﻿namespace TMC.Tools.CoreLib.Core.Enums;

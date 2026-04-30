@@ -22,10 +22,10 @@ public class DelayedProcessingQueueHandler(ISynchronizedQueue<Func<bool>> delaye
     public void Update()
     {
         var funcs = new List<Func<bool>>();
-        
+
         while (DelayedProcessingQueue.HasElement())
             funcs.Add(DelayedProcessingQueue.Dequeue());
-        
+
         foreach (var func in funcs)
             func.Invoke();
     }
