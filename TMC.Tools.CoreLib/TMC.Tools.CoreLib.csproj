@@ -1,37 +1,65 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Platforms>AnyCPU</Platforms>
+    <TargetFramework>net48</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWindowsForms>true</UseWindowsForms>
+    <LangVersion>default</LangVersion>
+    <Nullable>enable</Nullable>
+    <Title>DreamieTMC.TMCTools.CoreLib</Title>
+    <Authors>DreamieTMC</Authors>
+    <Description>Core utilities for use with external tools target TLoZ: Minish Cap that interface through Bizhawk.</Description>
+    <RepositoryUrl>https://github.com/Dreamie-TMC/TMCCoreUtils</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageId>DreamieTMC.TMCTools.CoreLib</PackageId>
+    <Version>1.0.2</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/Dreamie-TMC/TMCCoreUtils</PackageProjectUrl>
+    <Copyright>Copyright (c) 2026 DreamieTMC</Copyright>
+    <PackageTags>bizhawk;minish-cap;game-tools</PackageTags>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <Platforms>AnyCPU</Platforms>
-        <TargetFramework>net48</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <UseWindowsForms>true</UseWindowsForms>
-        <LangVersion>default</LangVersion>
-        <Nullable>enable</Nullable>
-        <Title>TMC.Tools.CoreLib</Title>
-        <Authors>DreamieTMC</Authors>
-        <Description>Core utilities for use with external tools target TLoZ: Minish Cap that interface through Bizhawk.</Description>
-        <RepositoryUrl>https://github.com/Dreamie-TMC/TMCCoreUtils</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
-    </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Publish'">
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
 
-    <PropertyGroup Condition=" '$(BIZHAWK_DATA_HOME)' == '' ">
-        <BIZHAWK_DATA_HOME>$(ProjectDir)../../MinishCapSpeedrunTools/BizHawk/</BIZHAWK_DATA_HOME>
-        <!-- if building EmuHawk from source, point to $(ProjectDir)../BizHawk/output/ -->
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="BizHawk.Client.Common" HintPath="$(BIZHAWK_DATA_HOME)dll/BizHawk.Client.Common.dll" />
-        <Reference Include="BizHawk.Emulation.Common" HintPath="$(BIZHAWK_DATA_HOME)dll/BizHawk.Emulation.Common.dll" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Remove="Core\Resources\tmc_tool_icon.ico" />
-      <EmbeddedResource Include="Core\Resources\tmc_tool_icon.ico" />
-    </ItemGroup>
-    <ItemGroup>
-      <PackageReference Include="System.Drawing.Common" Version="8.0.7" />
-    </ItemGroup>
-    
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Copy SourceFiles="$(OutputPath)$(MSBuildProjectName).dll" DestinationFolder="$(BIZHAWK_DATA_HOME)ExternalTools/dll" />
-        <Copy SourceFiles="$(OutputPath)$(MSBuildProjectName).dll" DestinationFolder="$(BIZHAWK_DATA_HOME)../../MinishCapTasingTools/Bizhawk/ExternalTools/dll" />
-    </Target>
+  <PropertyGroup Condition=" '$(BIZHAWK_HOME)' == '' ">
+    <BIZHAWK_HOME>$(ProjectDir)../BizHawk/</BIZHAWK_HOME>
+    <!-- if building EmuHawk from source, point to e.g. `$(ProjectDir)../BizHawk/output/` -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference
+      Include="BizHawk.Client.Common"
+      HintPath="$(BIZHAWK_HOME)dll/BizHawk.Client.Common.dll"
+    />
+    <Reference
+      Include="BizHawk.Emulation.Common"
+      HintPath="$(BIZHAWK_HOME)dll/BizHawk.Emulation.Common.dll"
+    />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Core\Resources\tmc_tool_icon.ico" />
+    <EmbeddedResource Include="Core\Resources\tmc_tool_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Text.Json" Version="10.0.7" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.7" />
+    <PackageReference Include="System.IO.Hashing" Version="10.0.7" />
+  </ItemGroup>
+
+  <Target Name="PublishToNuGet" DependsOnTargets="Pack">
+    <Exec Command="dotnet nuget push &quot;$(MSBuildProjectDirectory)\bin\$(Configuration)\$(PackageId).$(Version).nupkg&quot; --source https://api.nuget.org/v3/index.json --skip-duplicate" />
+  </Target>
+
+  <Target Name="PushAfterPack" AfterTargets="Pack" Condition="'$(Configuration)' == 'Publish'">
+    <Exec Command="dotnet nuget push &quot;$(MSBuildProjectDirectory)\bin\$(Configuration)\$(PackageId).$(Version).nupkg&quot; --source https://api.nuget.org/v3/index.json --skip-duplicate" />
+  </Target>
 </Project>

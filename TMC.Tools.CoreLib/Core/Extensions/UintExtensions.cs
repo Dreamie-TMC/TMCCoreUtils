@@ -11,11 +11,15 @@ public static class UintExtensions
 
     public static string ToFixedPointHalfWordLE(this uint value, bool useHex)
     {
-        return useHex ? $"{(value >> 8) & 0xFF:X}.{value & 0xFF:X}" : $"{(value >> 8) & 0xFF}.{value & 0xFF}";
+        return useHex
+            ? $"{(value >> 8) & 0xFF:X}.{value & 0xFF:X}"
+            : $"{(value >> 8) & 0xFF}.{value & 0xFF}";
     }
 
     public static string ToFixedPointWordLE(this uint value, bool useHex)
     {
-        return useHex ? $"{((value & 0xFF0000) | (value & 0xFF000000)) >> 16:X}.{(value & 0xFF) | (value & 0xFF00):X}" : $"{((value & 0xFF0000) | (value & 0xFF000000)) >> 16}.{(value & 0xFF) | (value & 0xFF00)}";
+        return useHex
+            ? $"{((value & 0xFF0000) | (value & 0xFF000000)) >> 16:X}.{(value & 0xFF) | (value & 0xFF00):X}"
+            : $"{((value & 0xFF0000) | (value & 0xFF000000)) >> 16}.{(value & 0xFF) | (value & 0xFF00)}";
     }
 }

@@ -22,7 +22,7 @@ public static class MemoryDomainExtensions
             MemoryDomain.SRAM => "SRAM",
             MemoryDomain.CombinedWRAM => "Combined WRAM",
             MemoryDomain.SystemBus => "System Bus",
-            _ => throw new ArgumentOutOfRangeException(nameof(domain), domain, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(domain), domain, null),
         };
     }
 }

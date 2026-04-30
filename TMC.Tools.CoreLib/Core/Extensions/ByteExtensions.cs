@@ -12,11 +12,7 @@ public static class ByteExtensions
     /// </summary>
     public static byte[] UshortToByteArrayLE(this ushort value)
     {
-        return new byte[]
-        {
-            (byte)(value & 0xFF),
-            (byte)((value >> 8) & 0xFF),
-        };
+        return new byte[] { (byte)(value & 0xFF), (byte)((value >> 8) & 0xFF) };
     }
 
     /// <summary>
@@ -24,11 +20,7 @@ public static class ByteExtensions
     /// </summary>
     public static byte[] ShortToByteArrayLE(this short value)
     {
-        return new byte[]
-        {
-            (byte)(value & 0xFF),
-            (byte)((value >> 8) & 0xFF),
-        };
+        return new byte[] { (byte)(value & 0xFF), (byte)((value >> 8) & 0xFF) };
     }
 
     /// <summary>
@@ -66,7 +58,8 @@ public static class ByteExtensions
         for (var i = 0; i < value.Count; )
         {
             builder.Append(useHex ? $"{value[i++]:X}" : $"{value[i++]}");
-            if (i == value.Count) break;
+            if (i == value.Count)
+                break;
             builder.Append(',');
         }
         builder.Append(']');

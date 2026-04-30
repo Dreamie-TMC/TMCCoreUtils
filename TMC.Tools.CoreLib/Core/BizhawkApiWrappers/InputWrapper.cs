@@ -6,15 +6,14 @@ public interface IInputWrapper
     IReadOnlyList<string> GetInputs();
 }
 
-public class InputWrapper : IInputWrapper
+public class InputWrapper(IApiContainerWrapper containerWrapper) : IInputWrapper
 {
-    internal ApiContainerWrapper ApiContainerWrapper { get; set; }
-    
-    public InputWrapper(IApiContainerWrapper containerWrapper)
-    {
-        ApiContainerWrapper = (ApiContainerWrapper)containerWrapper;
-    }
+    internal ApiContainerWrapper ApiContainerWrapper { get; set; } =
+        (ApiContainerWrapper)containerWrapper;
 
-    public IReadOnlyDictionary<string, object> GetMouse() => ApiContainerWrapper.CurrentContainer.Input.GetMouse();
-    public IReadOnlyList<string> GetInputs() => ApiContainerWrapper.CurrentContainer.Input.GetPressedButtons();
+    public IReadOnlyDictionary<string, object> GetMouse() =>
+        ApiContainerWrapper.CurrentContainer.Input.GetMouse();
+
+    public IReadOnlyList<string> GetInputs() =>
+        ApiContainerWrapper.CurrentContainer.Input.GetPressedButtons();
 }

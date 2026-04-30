@@ -31,7 +31,11 @@ public interface IMemoryAccessor
     /// <param name="length">The length of data you want to read.</param>
     /// <param name="domain">The memory domain to read from</param>
     /// <returns>The bytes read from the given address, or an empty list if memory is blocked.</returns>
-    IReadOnlyList<byte> LoadMemoryRegionAsListOfBytesFromAddress(long address, int length, MemoryDomain domain);
+    IReadOnlyList<byte> LoadMemoryRegionAsListOfBytesFromAddress(
+        long address,
+        int length,
+        MemoryDomain domain
+    );
 
     /// <summary>
     /// Writes a list of bytes to a target address in memory.
@@ -60,7 +64,12 @@ public interface IMemoryAccessor
     /// <param name="domain">The memory domain to write to</param>
     /// <returns>True if the value was written successfully, false otherwise</returns>
     /// <throws>@ArgumentOutOfRangeException if an invalid type is passed in</throws>
-    bool WriteValueToAddress(long targetAddress, long value, ReadWriteType type, MemoryDomain domain);
+    bool WriteValueToAddress(
+        long targetAddress,
+        long value,
+        ReadWriteType type,
+        MemoryDomain domain
+    );
 
     /// <summary>
     /// Reads a value of the given size from the given address
@@ -78,17 +87,13 @@ public interface IMemoryAccessor
     (uint area, uint room) LoadCurrentAreaAndRoom();
 }
 
-public class MemoryAccessor : IMemoryAccessor
+public class MemoryAccessor(IApiContainerWrapper containerWrapper, IClientHelper clientHelper)
+    : IMemoryAccessor
 {
-    internal ApiContainerWrapper ApiContainerWrapper { get; set; }
-    internal IClientHelper ClientHelper { get; set; }
+    internal ApiContainerWrapper ApiContainerWrapper { get; set; } =
+        (ApiContainerWrapper)containerWrapper;
+    internal IClientHelper ClientHelper { get; set; } = clientHelper;
     internal bool BlockCallsToMemory { get; set; }
-
-    public MemoryAccessor(IApiContainerWrapper containerWrapper, IClientHelper clientHelper)
-    {
-        ApiContainerWrapper = (ApiContainerWrapper)containerWrapper;
-        ClientHelper = clientHelper;
-    }
 
     public void Update()
     {
@@ -102,66 +107,139 @@ public class MemoryAccessor : IMemoryAccessor
             BlockCallsToMemory = true;
             return;
         }
-        
+
         //This code is complete garbage but it prevents issues
-        var emulator = (IEmulator)ApiContainerWrapper.CurrentContainer.Memory.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic).First(field => field.FieldType == typeof(IEmulator)).GetValue(ApiContainerWrapper.CurrentContainer.Memory)!;
-        var core = (IntPtr)emulator.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic).First(field => field.FieldType == typeof(IntPtr)).GetValue(emulator)!;
+        var emulator = (IEmulator)
+            ApiContainerWrapper
+                .CurrentContainer.Memory.GetType()
+                .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                .First(field => field.FieldType == typeof(IEmulator))
+                .GetValue(ApiContainerWrapper.CurrentContainer.Memory)!;
+        var core = (IntPtr)
+            emulator
+                .GetType()
+                .GetFields(BindingFlags.Instance | BindingFlags.NonPublic)
+                .First(field => field.FieldType == typeof(IntPtr))
+                .GetValue(emulator)!;
         if (core == IntPtr.Zero)
             BlockCallsToMemory = true;
     }
 
-    public IReadOnlyList<byte> LoadMemoryRegionAsListOfBytesFromAddress(long address, int length, MemoryDomain domain)
+    public IReadOnlyList<byte> LoadMemoryRegionAsListOfBytesFromAddress(
+        long address,
+        int length,
+        MemoryDomain domain
+    )
     {
-        return BlockCallsToMemory ? new List<byte>() : ApiContainerWrapper.CurrentContainer.Memory.ReadByteRange(address, length, domain.GetDomainAsString());
+        return BlockCallsToMemory
+            ? new List<byte>()
+            : ApiContainerWrapper.CurrentContainer.Memory.ReadByteRange(
+                address,
+                length,
+                domain.GetDomainAsString()
+            );
     }
 
     public bool WriteBytesToAddress(long address, MemoryDomain domain, List<byte> bytes)
     {
-        if (BlockCallsToMemory) return false;
-        
-        ApiContainerWrapper.CurrentContainer.Memory.WriteByteRange(address, bytes, domain.GetDomainAsString());
+        if (BlockCallsToMemory)
+            return false;
+
+        ApiContainerWrapper.CurrentContainer.Memory.WriteByteRange(
+            address,
+            bytes,
+            domain.GetDomainAsString()
+        );
         return true;
     }
-    
+
     public string ReadStringFromAddress(long address, int length, MemoryDomain domain)
     {
-        return BlockCallsToMemory ? "" : System.Text.Encoding.ASCII.GetString(ApiContainerWrapper.CurrentContainer.Memory.ReadByteRange(address, length, domain.GetDomainAsString()).ToArray());
+        return BlockCallsToMemory
+            ? ""
+            : System.Text.Encoding.ASCII.GetString(
+                ApiContainerWrapper
+                    .CurrentContainer.Memory.ReadByteRange(
+                        address,
+                        length,
+                        domain.GetDomainAsString()
+                    )
+                    .ToArray()
+            );
     }
 
-    public bool WriteValueToAddress(long targetAddress, long value, ReadWriteType type, MemoryDomain domain)
+    public bool WriteValueToAddress(
+        long targetAddress,
+        long value,
+        ReadWriteType type,
+        MemoryDomain domain
+    )
     {
-        if (BlockCallsToMemory) return false;
-        
+        if (BlockCallsToMemory)
+            return false;
+
         var dom = domain.GetDomainAsString();
 
         switch (type)
         {
             case ReadWriteType.Byte:
-                ApiContainerWrapper.CurrentContainer.Memory.WriteByte(targetAddress, (uint)value, dom);
+                ApiContainerWrapper.CurrentContainer.Memory.WriteByte(
+                    targetAddress,
+                    (uint)value,
+                    dom
+                );
                 break;
             case ReadWriteType.Signed8:
                 ApiContainerWrapper.CurrentContainer.Memory.WriteS8(targetAddress, (int)value, dom);
                 break;
             case ReadWriteType.Signed16:
-                ApiContainerWrapper.CurrentContainer.Memory.WriteS16(targetAddress, (int)value, dom);
+                ApiContainerWrapper.CurrentContainer.Memory.WriteS16(
+                    targetAddress,
+                    (int)value,
+                    dom
+                );
                 break;
             case ReadWriteType.Signed24:
-                ApiContainerWrapper.CurrentContainer.Memory.WriteS24(targetAddress, (int)value, dom);
+                ApiContainerWrapper.CurrentContainer.Memory.WriteS24(
+                    targetAddress,
+                    (int)value,
+                    dom
+                );
                 break;
             case ReadWriteType.Signed32:
-                ApiContainerWrapper.CurrentContainer.Memory.WriteS32(targetAddress, (int)value, dom);
+                ApiContainerWrapper.CurrentContainer.Memory.WriteS32(
+                    targetAddress,
+                    (int)value,
+                    dom
+                );
                 break;
             case ReadWriteType.Unsigned8:
-                ApiContainerWrapper.CurrentContainer.Memory.WriteU8(targetAddress, (uint)value, dom);
+                ApiContainerWrapper.CurrentContainer.Memory.WriteU8(
+                    targetAddress,
+                    (uint)value,
+                    dom
+                );
                 break;
             case ReadWriteType.Unsigned16:
-                ApiContainerWrapper.CurrentContainer.Memory.WriteU16(targetAddress, (uint)value, dom);
+                ApiContainerWrapper.CurrentContainer.Memory.WriteU16(
+                    targetAddress,
+                    (uint)value,
+                    dom
+                );
                 break;
             case ReadWriteType.Unsigned24:
-                ApiContainerWrapper.CurrentContainer.Memory.WriteU24(targetAddress, (uint)value, dom);
+                ApiContainerWrapper.CurrentContainer.Memory.WriteU24(
+                    targetAddress,
+                    (uint)value,
+                    dom
+                );
                 break;
             case ReadWriteType.Unsigned32:
-                ApiContainerWrapper.CurrentContainer.Memory.WriteU32(targetAddress, (uint)value, dom);
+                ApiContainerWrapper.CurrentContainer.Memory.WriteU32(
+                    targetAddress,
+                    (uint)value,
+                    dom
+                );
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
@@ -172,27 +250,52 @@ public class MemoryAccessor : IMemoryAccessor
 
     public uint LoadValueFromAddress(long address, ReadWriteType type, MemoryDomain domain)
     {
-        if (BlockCallsToMemory) return 0;
-        
+        if (BlockCallsToMemory)
+            return 0;
+
         var dom = domain.GetDomainAsString();
 
         return type switch
         {
-            ReadWriteType.Byte => ApiContainerWrapper.CurrentContainer.Memory.ReadByte(address, dom),
-            ReadWriteType.Signed8 => (uint)ApiContainerWrapper.CurrentContainer.Memory.ReadS8(address, dom),
-            ReadWriteType.Signed16 => (uint)ApiContainerWrapper.CurrentContainer.Memory.ReadS16(address, dom),
-            ReadWriteType.Signed24 => (uint)ApiContainerWrapper.CurrentContainer.Memory.ReadS24(address, dom),
-            ReadWriteType.Signed32 => (uint)ApiContainerWrapper.CurrentContainer.Memory.ReadS32(address, dom),
-            ReadWriteType.Unsigned8 => ApiContainerWrapper.CurrentContainer.Memory.ReadU8(address, dom),
-            ReadWriteType.Unsigned16 => ApiContainerWrapper.CurrentContainer.Memory.ReadU16(address, dom),
-            ReadWriteType.Unsigned24 => ApiContainerWrapper.CurrentContainer.Memory.ReadU24(address, dom),
-            ReadWriteType.Unsigned32 => ApiContainerWrapper.CurrentContainer.Memory.ReadU32(address, dom),
-            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            ReadWriteType.Byte => ApiContainerWrapper.CurrentContainer.Memory.ReadByte(
+                address,
+                dom
+            ),
+            ReadWriteType.Signed8 => (uint)
+                ApiContainerWrapper.CurrentContainer.Memory.ReadS8(address, dom),
+            ReadWriteType.Signed16 => (uint)
+                ApiContainerWrapper.CurrentContainer.Memory.ReadS16(address, dom),
+            ReadWriteType.Signed24 => (uint)
+                ApiContainerWrapper.CurrentContainer.Memory.ReadS24(address, dom),
+            ReadWriteType.Signed32 => (uint)
+                ApiContainerWrapper.CurrentContainer.Memory.ReadS32(address, dom),
+            ReadWriteType.Unsigned8 => ApiContainerWrapper.CurrentContainer.Memory.ReadU8(
+                address,
+                dom
+            ),
+            ReadWriteType.Unsigned16 => ApiContainerWrapper.CurrentContainer.Memory.ReadU16(
+                address,
+                dom
+            ),
+            ReadWriteType.Unsigned24 => ApiContainerWrapper.CurrentContainer.Memory.ReadU24(
+                address,
+                dom
+            ),
+            ReadWriteType.Unsigned32 => ApiContainerWrapper.CurrentContainer.Memory.ReadU32(
+                address,
+                dom
+            ),
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null),
         };
     }
 
     public (uint area, uint room) LoadCurrentAreaAndRoom()
     {
-        return BlockCallsToMemory ? ((uint area, uint room))(255, 255) : (area: ApiContainerWrapper.CurrentContainer.Memory.ReadU8(0x0BF4, "IWRAM"), room: ApiContainerWrapper.CurrentContainer.Memory.ReadU8(0x0BF5, "IWRAM"));
+        return BlockCallsToMemory
+            ? ((uint area, uint room))(255, 255)
+            : (
+                area: ApiContainerWrapper.CurrentContainer.Memory.ReadU8(0x0BF4, "IWRAM"),
+                room: ApiContainerWrapper.CurrentContainer.Memory.ReadU8(0x0BF5, "IWRAM")
+            );
     }
 }

@@ -21,7 +21,7 @@ public interface IClientHelper
     /// </summary>
     /// <returns>The current frame count</returns>
     int FrameCount();
-    
+
     bool IsLagFrame();
 
     int WindowSize();
@@ -34,14 +34,10 @@ public interface IClientHelper
 /// <summary>
 /// This class takes all services that directly access memory in order to lock them during core reboots
 /// </summary>
-public class ClientHelper : IClientHelper
+public class ClientHelper(IApiContainerWrapper containerWrapper) : IClientHelper
 {
-    internal ApiContainerWrapper ApiContainerWrapper { get; set; }
-    
-    public ClientHelper(IApiContainerWrapper containerWrapper)
-    {
-        ApiContainerWrapper = (ApiContainerWrapper)containerWrapper;
-    }
+    internal ApiContainerWrapper ApiContainerWrapper { get; set; } =
+        (ApiContainerWrapper)containerWrapper;
 
     public void CoreReboot()
     {

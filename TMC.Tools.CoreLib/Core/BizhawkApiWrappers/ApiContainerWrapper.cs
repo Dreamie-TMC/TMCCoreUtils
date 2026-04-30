@@ -17,14 +17,9 @@ public interface IApiContainerWrapper
     void Restart(ApiContainer apiContainer);
 }
 
-public class ApiContainerWrapper : IApiContainerWrapper
+public class ApiContainerWrapper(ApiContainer apiContainer) : IApiContainerWrapper
 {
-    public ApiContainer CurrentContainer { get; set; }
-
-    public ApiContainerWrapper(ApiContainer apiContainer)
-    {
-        CurrentContainer = apiContainer;
-    }
+    public ApiContainer CurrentContainer { get; set; } = apiContainer;
 
     public void Restart(ApiContainer apiContainer)
     {

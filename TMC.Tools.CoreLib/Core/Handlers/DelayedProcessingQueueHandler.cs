@@ -13,22 +13,20 @@ public interface IDelayedProcessingQueueHandler
     void Update();
 }
 
-public class DelayedProcessingQueueHandler : IDelayedProcessingQueueHandler
+public class DelayedProcessingQueueHandler(ISynchronizedQueue<Func<bool>> delayedProcessingQueue)
+    : IDelayedProcessingQueueHandler
 {
-    internal ISynchronizedQueue<Func<bool>> DelayedProcessingQueue { get; set; }
-
-    public DelayedProcessingQueueHandler(ISynchronizedQueue<Func<bool>> delayedProcessingQueue)
-    {
-        DelayedProcessingQueue = delayedProcessingQueue;
-    }
+    internal ISynchronizedQueue<Func<bool>> DelayedProcessingQueue { get; set; } =
+        delayedProcessingQueue;
 
     public void Update()
     {
+        var funcs = new List<Func<bool>>();
+
         while (DelayedProcessingQueue.HasElement())
-        {
-            var func = DelayedProcessingQueue.Dequeue();
-            if (!func.Invoke())
-                DelayedProcessingQueue.Enqueue(func);
-        }
+            funcs.Add(DelayedProcessingQueue.Dequeue());
+
+        foreach (var func in funcs)
+            func.Invoke();
     }
 }

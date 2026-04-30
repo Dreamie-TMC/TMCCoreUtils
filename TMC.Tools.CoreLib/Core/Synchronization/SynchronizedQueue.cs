@@ -36,7 +36,7 @@ public interface ISynchronizedQueue<T> : IDisposable
     /// Returns the first element in the queue
     /// </summary>
     T Dequeue();
-    
+
     /// <summary>
     /// Determines whether or not there is an element in the queue
     /// </summary>
@@ -50,19 +50,11 @@ public interface ISynchronizedQueue<T> : IDisposable
 /// <typeparam name="T">The type to use for the underlying queue</typeparam>
 public class SynchronizedQueue<T> : ISynchronizedQueue<T>
 {
-    private volatile Queue<T> _dispatchQueue;
-    private volatile int _currentQueueSize;
+    private volatile Queue<T> _dispatchQueue = new(16);
+    private volatile int _currentQueueSize = 0;
 
-    private Semaphore _semaphore;
-    private Mutex _mutex;
-
-    public SynchronizedQueue()
-    {
-        _dispatchQueue = new Queue<T>(16);
-        _currentQueueSize = 0;
-        _mutex = new Mutex();
-        _semaphore = new Semaphore(0, 65535);
-    }
+    private Semaphore _semaphore = new(0, 65535);
+    private Mutex _mutex = new();
 
     ~SynchronizedQueue()
     {
@@ -108,7 +100,7 @@ public class SynchronizedQueue<T> : ISynchronizedQueue<T>
         _mutex.ReleaseMutex();
         return result;
     }
-    
+
     public T Dequeue()
     {
         _semaphore.WaitOne();
@@ -117,7 +109,7 @@ public class SynchronizedQueue<T> : ISynchronizedQueue<T>
         _mutex.ReleaseMutex();
         return result;
     }
-    
+
     public bool HasElement()
     {
         _mutex.WaitOne();
@@ -126,19 +118,18 @@ public class SynchronizedQueue<T> : ISynchronizedQueue<T>
         return result;
     }
 
-    private void ReleaseUnmanagedResources()
-    {
-    }
+    private void ReleaseUnmanagedResources() { }
 
     private void Dispose(bool disposing)
     {
         ReleaseUnmanagedResources();
-        if (!disposing) return;
-        
+        if (!disposing)
+            return;
+
         _mutex.Dispose();
         _semaphore.Dispose();
     }
-    
+
     public void Dispose()
     {
         Dispose(true);

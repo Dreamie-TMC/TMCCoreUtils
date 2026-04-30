@@ -5,14 +5,10 @@ namespace TMC.Tools.CoreLib.Core.Handlers;
 
 public class ClientSurfaceDrawQueueHandler
 {
-    public ISynchronizedQueue<Action> ClientSurfaceQueue { get; internal set; }
+    public ISynchronizedQueue<Action> ClientSurfaceQueue { get; internal set; } =
+        new SynchronizedQueue<Action>();
 
     public const DisplaySurfaceID Id = DisplaySurfaceID.Client;
-
-    public ClientSurfaceDrawQueueHandler()
-    {
-        ClientSurfaceQueue = new SynchronizedQueue<Action>();
-    }
 
     public Action GetDrawAction()
     {

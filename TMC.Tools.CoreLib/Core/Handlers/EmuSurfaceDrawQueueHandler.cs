@@ -5,14 +5,10 @@ namespace TMC.Tools.CoreLib.Core.Handlers;
 
 public class EmuSurfaceDrawQueueHandler
 {
-    public ISynchronizedQueue<Action> EmuSurfaceQueue { get; internal set; }
+    public ISynchronizedQueue<Action> EmuSurfaceQueue { get; internal set; } =
+        new SynchronizedQueue<Action>();
 
     public const DisplaySurfaceID Id = DisplaySurfaceID.EmuCore;
-
-    public EmuSurfaceDrawQueueHandler()
-    {
-        EmuSurfaceQueue = new SynchronizedQueue<Action>();
-    }
 
     public Action GetDrawAction()
     {
