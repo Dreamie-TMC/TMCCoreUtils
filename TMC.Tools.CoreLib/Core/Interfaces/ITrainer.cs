@@ -44,6 +44,11 @@ public interface ITrainer
     void TryAddDependenciesToCollection(IServiceCollection serviceCollection);
 
     /// <summary>
+    /// Returns the display name shown on the trainer's checkbox in the combined toolset UI.
+    /// </summary>
+    string GetCheckboxName();
+
+    /// <summary>
     /// An asynchronous function that checks the github repository releases for the current trainer and returns a
     /// response containing information about the trainer update if it exists. This function is called once by the
     /// combined toolset on tool initialization.
