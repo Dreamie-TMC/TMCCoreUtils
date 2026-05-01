@@ -21,6 +21,7 @@ public abstract class BaseTrainer(IGithubClient httpClient) : ITrainer
     public abstract void UpdateAfter();
     public abstract void Restart();
     public abstract void TryAddDependenciesToCollection(IServiceCollection serviceCollection);
+    public abstract string GetCheckboxName();
 
     public async Task<CheckForUpdateResponse> CheckForUpdates()
     {
