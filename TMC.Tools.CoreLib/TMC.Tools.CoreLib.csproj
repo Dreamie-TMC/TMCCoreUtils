@@ -12,7 +12,7 @@
     <RepositoryUrl>https://github.com/Dreamie-TMC/TMCCoreUtils</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageId>DreamieTMC.TMCTools.CoreLib</PackageId>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/Dreamie-TMC/TMCCoreUtils</PackageProjectUrl>
