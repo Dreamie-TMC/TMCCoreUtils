@@ -16,6 +16,11 @@ public abstract class BaseTrainer(IGithubClient httpClient) : ITrainer
 {
     protected abstract string RepoUrl { get; }
     protected abstract VersionIdentifier CurrentVersion { get; }
+    protected internal IGithubClient HttpClient { get; } = httpClient;
+
+    // Default impl for the puposes of registering services to service collection only
+    protected BaseTrainer()
+        : this(null!) { }
 
     public abstract void UpdateBefore();
     public abstract void UpdateAfter();
@@ -33,7 +38,7 @@ public abstract class BaseTrainer(IGithubClient httpClient) : ITrainer
                 $"repos{repoPath}/releases/latest"
             );
 
-            var response = await httpClient.SendAsync(request).ConfigureAwait(false);
+            var response = await HttpClient.SendAsync(request).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
                 return new CheckForUpdateResponse { HasUpdateAvailable = false };
 
