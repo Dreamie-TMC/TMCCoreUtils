@@ -1,0 +1,32 @@
+﻿using TMC.Tools.CoreLib.Core.Synchronization;
+
+namespace TMC.Tools.CoreLib.Core.Handlers;
+
+/// <summary>
+/// A wrapper for the SynchronizedQueue class to handle dispatching events written to the queue.
+/// </summary>
+public interface IDelayedProcessingQueueHandler
+{
+    /// <summary>
+    /// Processes each item in the queue. This should be the final function called in the "UpdateAfter" method of your tool.
+    /// </summary>
+    void Update();
+}
+
+public class DelayedProcessingQueueHandler(ISynchronizedQueue<Func<bool>> delayedProcessingQueue)
+    : IDelayedProcessingQueueHandler
+{
+    internal ISynchronizedQueue<Func<bool>> DelayedProcessingQueue { get; set; } =
+        delayedProcessingQueue;
+
+    public void Update()
+    {
+        var funcs = new List<Func<bool>>();
+
+        while (DelayedProcessingQueue.HasElement())
+            funcs.Add(DelayedProcessingQueue.Dequeue());
+
+        foreach (var func in funcs)
+            func.Invoke();
+    }
+}
